@@ -92,7 +92,7 @@ exports['qtarget']:Player({
     options = {
         {
             icon = "fa-solid fa-handcuffs",
-            label = "Festnehmen",
+            label = "Fesseln (Kabelbinder)",
             item = Config.req_items['handcuff'],
             event = 'zakajdankuj',
             canInteract = function(entity)
@@ -123,7 +123,7 @@ exports['qtarget']:Player({
                     local coords = GetEntityCoords(playerPed)
                     TriggerServerEvent("moritz_handcuffs:uncuffPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)), playerheading, coords, playerlocation)
                 else
-                    moritz_notify("Diese Person ist nicht Festgenommen")
+                    moritz_notify("Diese Person ist nicht gefesselt")
                 end
             end,
             canInteract = function(entity)
@@ -152,7 +152,7 @@ exports['qtarget']:Player({
                 if target then
                     TriggerServerEvent("moritz_handcuffs:searchInventory", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)))
                 else
-                    moritz_notify("Du kannst nur Spieler durchsuchen, wenn sie verhaftet oder tot sind")
+                    moritz_notify("Du kannst nur Spieler durchsuchen, wenn sie gefesselt oder tot sind")
                 end
             end,
             canInteract = function(entity)
@@ -229,7 +229,7 @@ exports['qtarget']:Player({
         },
         {
             icon = "fa-solid fa-handcuffs",
-            label = "Handschellen knacken (Dietrich)",
+            label = "Kabelbinder zerschneiden (Schere)",
             item = Config.req_items['lockpick'],
             action = function(entity)
                 local playerPed = PlayerPedId()
@@ -248,12 +248,12 @@ exports['qtarget']:Player({
                     else
                         local ___klamer = math.random(1,2)
                         if ___klamer == 1 then
-                            moritz_notify("Der Dietrich ist zerbrochen")
+                            moritz_notify("Die Schere wurde Stumpf")
                             TriggerServerEvent("moritz_handcuffs:lockpickDelete")
                         end
                     end
                 else
-                    moritz_notify("Du kannst die Handschellen nicht knacken")
+                    moritz_notify("Du kannst die Kabelbinder nicht Zerschneiden")
                 end
             end,
             canInteract = function(entity)

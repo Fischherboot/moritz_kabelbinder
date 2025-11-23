@@ -28,7 +28,7 @@ RegisterNetEvent("moritz_handcuffs:cuffPlayer", function(target, playerheading, 
     local targetPed = GetPlayerPed(target)
 
     if not DoesEntityExist(targetPed) then
-        TriggerClientEvent('moritz_notify_handcuff',"Du kannst niemand festnehmen")
+        TriggerClientEvent('moritz_notify_handcuff',"Du kannst niemand fesseln")
         return
     end
 
@@ -42,12 +42,12 @@ RegisterNetEvent("moritz_handcuffs:cuffPlayer", function(target, playerheading, 
     end
 
     if Player(player).state.moritz_PlayerIsCuffed then
-        TriggerClientEvent('moritz_notify_handcuff', "Du kannst niemanden festnehmen, während du selbst festgenommen bist")
+        TriggerClientEvent('moritz_notify_handcuff', "Du kannst niemanden fesseln, während du selbst gefesselt bist")
         return
     end
 
     if Player(target).state.moritz_PlayerIsCuffed then
-        TriggerClientEvent('moritz_notify_handcuff', "Diese Person ist bereits festgenommen")
+        TriggerClientEvent('moritz_notify_handcuff', "Diese Person ist bereits gefesselt")
         return
     end
 
@@ -73,12 +73,12 @@ RegisterNetEvent("moritz_handcuffs:uncuffPlayer", function(target, playerheading
     local xPlayer = ESX.GetPlayerFromId(player)
 
     if Player(player).state.moritz_PlayerIsCuffed then
-        TriggerClientEvent('moritz_notify_handcuff',"Du kannst keine Handschellen lösen, während du selbst festgenommen bist.")
+        TriggerClientEvent('moritz_notify_handcuff',"Du kannst keine Kabelbinder lösen, während du selbst gefesselt bist.")
         return
     end
 
     if not Player(target).state.moritz_PlayerIsCuffed then
-        TriggerClientEvent('moritz_notify_handcuff',"Diese Person ist nicht festgenommen")
+        TriggerClientEvent('moritz_notify_handcuff',"Diese Person ist nicht gefesselt")
         return
     end
 
@@ -87,7 +87,7 @@ RegisterNetEvent("moritz_handcuffs:uncuffPlayer", function(target, playerheading
     TriggerClientEvent("moritz_handcuffs:uncuffMe", target, playerheading, coords, playerlocation)
     TriggerClientEvent("moritz_handcuffs:uncuffHim", player)
 
-    TriggerClientEvent('moritz_notify_handcuff',"Du hast die Handschellen entfernt von ID: ["..target.."]")
+    TriggerClientEvent('moritz_notify_handcuff',"Du hast die Kabelbinder entfernt von ID: ["..target.."]")
     local xTarget = ESX.GetPlayerFromId(target)
     xTarget.showNotification("Du wurdest festgenmmen von ID: ["..player.."]")
 
@@ -99,7 +99,7 @@ RegisterNetEvent("moritz_handcuffs:searchInventory", function(target)
     local xPlayer = ESX.GetPlayerFromId(player)
     local targetLicense = string.gsub(GetPlayerIdentifier(player,1),"license:","")
     if Player(player).state.moritz_PlayerIsCuffed then
-        TriggerClientEvent('moritz_notify_handcuff',"Du kannst niemanden durchsuchen, während du festgenommen bist")
+        TriggerClientEvent('moritz_notify_handcuff',"Du kannst niemanden durchsuchen, während du gefesselt bist")
         return
     end
 
@@ -241,7 +241,7 @@ RegisterNetEvent("moritz_handcuffs:lockpickDelete", function()
     local xPlayer = ESX.GetPlayerFromId(player)
     local item = xPlayer.getInventoryItem(Config.req_items['lockpick'])
     if item.count > 0 then
-        TriggerClientEvent('moritz_notify_handcuff',"Der Dietrich ist zerbrochen")
+        TriggerClientEvent('moritz_notify_handcuff',"Die Schere ist Stumpf geworden")
         xPlayer.removeInventoryItem(Config.req_items['lockpick'],1)
     end
 end)
