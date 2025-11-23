@@ -4,7 +4,7 @@ local setInVehicle = false
 ESX = exports["es_extended"]:getSharedObject()
 
 
-function klamer_notify(title,text,time,type)
+function moritz_notify(title,text,time,type)
     if not text then text = '' end
     if not time then time = 2500 end
     if not type then type = 'info' end
@@ -98,11 +98,11 @@ exports['qtarget']:Player({
             canInteract = function(entity)
                 if IsPedAPlayer(entity) then
                     local target = GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))
-                    local isDead = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_isDead
-                    if Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.klamer_PlayerIsCuffed then
+                    local isDead = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_isDead
+                    if Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.moritz_PlayerIsCuffed then
                         return false
                     end
-                    if not Player(target).state.klamer_PlayerIsCuffed then
+                    if not Player(target).state.moritz_PlayerIsCuffed then
                         return true
                     else
                         return false
@@ -116,24 +116,24 @@ exports['qtarget']:Player({
             item = Config.req_items['handcuff'],
             action = function(entity)
                 local playerPed = PlayerPedId()
-                local isDead = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_isDead
+                local isDead = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_isDead
                 if IsEntityPlayingAnim(entity, "mp_arresting", "idle", 3) or isDead then
                     local playerheading = GetEntityHeading(playerPed)
                     local playerlocation = GetEntityForwardVector(playerPed)
                     local coords = GetEntityCoords(playerPed)
-                    TriggerServerEvent("klamer_handcuffs:uncuffPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)), playerheading, coords, playerlocation)
+                    TriggerServerEvent("moritz_handcuffs:uncuffPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)), playerheading, coords, playerlocation)
                 else
-                    klamer_notify("Diese Person ist nicht Festgenommen")
+                    moritz_notify("Diese Person ist nicht Festgenommen")
                 end
             end,
             canInteract = function(entity)
                 if IsPedAPlayer(entity) then
                     local target = GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))
-                    local isDead = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_isDead
-                    if Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.klamer_PlayerIsCuffed or isDead then
+                    local isDead = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_isDead
+                    if Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.moritz_PlayerIsCuffed or isDead then
                         return false
                     end
-                    if Player(target).state.klamer_PlayerIsCuffed then
+                    if Player(target).state.moritz_PlayerIsCuffed then
                         return true
                     else
                         return false
@@ -148,19 +148,19 @@ exports['qtarget']:Player({
             item = Config.req_items['handcuff'],
             action = function(entity)
                 local playerPed = PlayerPedId()
-                local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsCuffed
+                local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerIsCuffed
                 if target then
-                    TriggerServerEvent("klamer_handcuffs:searchInventory", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)))
+                    TriggerServerEvent("moritz_handcuffs:searchInventory", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)))
                 else
-                    klamer_notify("Du kannst nur Spieler durchsuchen, wenn sie verhaftet oder tot sind")
+                    moritz_notify("Du kannst nur Spieler durchsuchen, wenn sie verhaftet oder tot sind")
                 end
             end,
             canInteract = function(entity)
                 if IsPedAPlayer(entity) then
-                    if Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.klamer_PlayerIsCuffed then
+                    if Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.moritz_PlayerIsCuffed then
                         return false
                     end
-                    local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsCuffed
+                    local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerIsCuffed
                     if target then
                         return true
                     else
@@ -176,25 +176,25 @@ exports['qtarget']:Player({
             action = function(entity)
                 local playerPed = PlayerPedId()
 
-                local entityIsDragged = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsDragged
-                local entityDraggingSomeone = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerDraggingSomeone
-                local playerDraggingSomeone = LocalPlayer.state.klamer_PlayerDraggingSomeone
+                local entityIsDragged = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerIsDragged
+                local entityDraggingSomeone = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerDraggingSomeone
+                local playerDraggingSomeone = LocalPlayer.state.moritz_PlayerDraggingSomeone
                 if (not entityIsDragged and not entityDraggingSomeone and not playerDraggingSomeone and not target) then
-                    TriggerServerEvent("klamer_handcuffs:dragPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)))
+                    TriggerServerEvent("moritz_handcuffs:dragPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)))
                     text_loop = true
                     move_3D_text_loop()
                 else
-                    klamer_notify("Du kannst diesen Spieler nicht bewegen!")
+                    moritz_notify("Du kannst diesen Spieler nicht bewegen!")
                 end
                 
             end,
             canInteract = function(entity)
                 if IsPedAPlayer(entity) then
-                    local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsCuffed
+                    local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerIsCuffed
 
-                    local entityIsDragged = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsDragged
-                    local entityDraggingSomeone = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerDraggingSomeone
-                    local playerDraggingSomeone = LocalPlayer.state.klamer_PlayerDraggingSomeone
+                    local entityIsDragged = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerIsDragged
+                    local entityDraggingSomeone = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerDraggingSomeone
+                    local playerDraggingSomeone = LocalPlayer.state.moritz_PlayerDraggingSomeone
                     if (target and not entityIsDragged and not entityDraggingSomeone and not playerDraggingSomeone) then
                         return true
                     else
@@ -210,15 +210,15 @@ exports['qtarget']:Player({
                 local playerPed = PlayerPedId()
                 text_loop = false
                 if ESX.PlayerData.job.name == "police" then
-                    TriggerServerEvent("klamer_handcuffs:unDragPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)))
+                    TriggerServerEvent("moritz_handcuffs:unDragPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)))
                 else
-                    klamer_notify("Du kannst den Spieler nicht loslassen!")
+                    moritz_notify("Du kannst den Spieler nicht loslassen!")
                 end
             end,
             canInteract = function(entity)
                 if IsPedAPlayer(entity) then
-                    local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsDragged
-                    local playerState = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.klamer_PlayerDraggingSomeone
+                    local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerIsDragged
+                    local playerState = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.moritz_PlayerDraggingSomeone
                     if target and playerState then
                         return true
                     else
@@ -233,10 +233,10 @@ exports['qtarget']:Player({
             item = Config.req_items['lockpick'],
             action = function(entity)
                 local playerPed = PlayerPedId()
-                local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsDragged
-                local isCuffed = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsCuffed
-                local playerState = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.klamer_PlayerDraggingSomeone
-                local isCuffed2 = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.klamer_PlayerIsCuffed
+                local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerIsDragged
+                local isCuffed = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerIsCuffed
+                local playerState = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.moritz_PlayerDraggingSomeone
+                local isCuffed2 = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.moritz_PlayerIsCuffed
                 if not playerState and not target and isCuffed and not isCuffed2 then
                     local success = lib.skillCheck({'medium', 'medium', 'hard'}, {'w', 'a', 's', 'd'})
 
@@ -244,24 +244,24 @@ exports['qtarget']:Player({
                         local playerheading = GetEntityHeading(playerPed)
                         local playerlocation = GetEntityForwardVector(playerPed)
                         local coords = GetEntityCoords(playerPed)
-                        TriggerServerEvent("klamer_handcuffs:uncuffPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)), playerheading, coords, playerlocation)
+                        TriggerServerEvent("moritz_handcuffs:uncuffPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)), playerheading, coords, playerlocation)
                     else
                         local ___klamer = math.random(1,2)
                         if ___klamer == 1 then
-                            klamer_notify("Der Dietrich ist zerbrochen")
-                            TriggerServerEvent("klamer_handcuffs:lockpickDelete")
+                            moritz_notify("Der Dietrich ist zerbrochen")
+                            TriggerServerEvent("moritz_handcuffs:lockpickDelete")
                         end
                     end
                 else
-                    klamer_notify("Du kannst die Handschellen nicht knacken")
+                    moritz_notify("Du kannst die Handschellen nicht knacken")
                 end
             end,
             canInteract = function(entity)
                 if IsPedAPlayer(entity) then
-                    local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsDragged
-                    local isCuffed = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsCuffed
-                    local playerState = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.klamer_PlayerDraggingSomeone
-                    local isCuffed2 = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.klamer_PlayerIsCuffed
+                    local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerIsDragged
+                    local isCuffed = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerIsCuffed
+                    local playerState = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.moritz_PlayerDraggingSomeone
+                    local isCuffed2 = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.moritz_PlayerIsCuffed
                     if not playerState and not target and isCuffed and not isCuffed2 then
                         return true
                     else
@@ -275,31 +275,31 @@ exports['qtarget']:Player({
             label = "Ins Fahrzeug setzen",
             action = function(entity)
                 local playerPed = PlayerPedId()
-                local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsDragged
-                local playerState = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.klamer_PlayerDraggingSomeone
-                local cuffed = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsCuffed
-                local isDead = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_isDead
+                local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerIsDragged
+                local playerState = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.moritz_PlayerDraggingSomeone
+                local cuffed = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerIsCuffed
+                local isDead = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_isDead
 
                 if (cuffed or isDead) and not target and not playerState then
                     local vehicle, distance = ESX.Game.GetClosestVehicle(GetEntityCoords(PlayerPedId()))
 
                     if GetVehicleDoorLockStatus(vehicle) == 4 then
-                        klamer_notify("Das Fahrzeug ist abgeschlossen!")
+                        moritz_notify("Das Fahrzeug ist abgeschlossen!")
                         return
                     end
 
                     if not DoesEntityExist(vehicle) then
-                        klamer_notify("Kein Fahrzeug in der Nähe")
+                        moritz_notify("Kein Fahrzeug in der Nähe")
                         return
                     end
 
                     if distance > 6.0 then
-                        klamer_notify("Das Fahrzeug ist zu weit entfernt")
+                        moritz_notify("Das Fahrzeug ist zu weit entfernt")
                         return
                     end
 
                     if not AreAnyVehicleSeatsFree(vehicle) then
-                        klamer_notify("Kein Platz im Fahrzeug frei")
+                        moritz_notify("Kein Platz im Fahrzeug frei")
                         return
                     end
 
@@ -308,25 +308,25 @@ exports['qtarget']:Player({
                     if seats == 4 then
                         for i = 1,2 do
                             if IsVehicleSeatFree(vehicle,i) then
-                                TriggerServerEvent("klamer_handcuffs:setPedIntoVehicle",GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)),tostring(vehicle),i)
+                                TriggerServerEvent("moritz_handcuffs:setPedIntoVehicle",GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)),tostring(vehicle),i)
                                 return
                             end
                         end
                     else
                         if IsVehicleSeatFree(vehicle,0) then
-                            TriggerServerEvent("klamer_handcuffs:setPedIntoVehicle",GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)),tostring(vehicle),0)
+                            TriggerServerEvent("moritz_handcuffs:setPedIntoVehicle",GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)),tostring(vehicle),0)
                             return
                         end
                     end
                 else
-                    klamer_notify("Du kannst den Spieler nicht ins Fahrzeug setzen")
+                    moritz_notify("Du kannst den Spieler nicht ins Fahrzeug setzen")
                 end
             end,
             canInteract = function(entity)
                 if IsPedAPlayer(entity) then
-                    local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsDragged
-                    local playerState = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.klamer_PlayerDraggingSomeone
-                    local cuffed = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsCuffed
+                    local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerIsDragged
+                    local playerState = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))).state.moritz_PlayerDraggingSomeone
+                    local cuffed = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_PlayerIsCuffed
                     if not target and not playerState and cuffed then
                         return true
                     else
@@ -355,9 +355,9 @@ exports['qtarget']:Vehicle({
                     local ped = GetPedInVehicleSeat(vehicle,i)
                     if ped ~= 0 then
                         if IsPedAPlayer(ped) then
-                            local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped))).state.klamer_PlayerIsCuffed
+                            local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped))).state.moritz_PlayerIsCuffed
                             if target then
-                                TriggerServerEvent("klamer_handcuffs:getPedFromVehicle", GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped)))
+                                TriggerServerEvent("moritz_handcuffs:getPedFromVehicle", GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped)))
                                 return
                             end
                         end
@@ -374,7 +374,7 @@ exports['qtarget']:Vehicle({
                         local ped = GetPedInVehicleSeat(vehicle,i)
                         if ped ~= 0 then
                             if IsPedAPlayer(ped) then
-                                local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped))).state.klamer_PlayerIsCuffed
+                                local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(ped))).state.moritz_PlayerIsCuffed
                                 if target then
                                     return true
                                 end
@@ -398,7 +398,7 @@ local function loadAnimationDictonary(dictname)
 end
 local zakajdankowany = false
 
-RegisterNetEvent("klamer_handcuffs:cuffMe", function(playerheading, playercoords, playerlocation, rope)
+RegisterNetEvent("moritz_handcuffs:cuffMe", function(playerheading, playercoords, playerlocation, rope)
     local playerPed = PlayerPedId()
 
     if playerheading then
@@ -448,7 +448,7 @@ end)
 
 
 
-RegisterNetEvent("klamer_handcuffs:cuffHim", function(fastCuff)
+RegisterNetEvent("moritz_handcuffs:cuffHim", function(fastCuff)
     local playerPed = PlayerPedId()
 
     if fastCuff then
@@ -469,7 +469,7 @@ RegisterNetEvent("klamer_handcuffs:cuffHim", function(fastCuff)
     end
 end)
 
-RegisterNetEvent("klamer_handcuffs:uncuffMe", function(playerheading, playercoords, playerlocation)
+RegisterNetEvent("moritz_handcuffs:uncuffMe", function(playerheading, playercoords, playerlocation)
     local playerPed = PlayerPedId()
     if not playerheading then
         ClearPedTasks(playerPed)
@@ -499,7 +499,7 @@ RegisterNetEvent("klamer_handcuffs:uncuffMe", function(playerheading, playercoor
     end
 end)
 
-RegisterNetEvent("klamer_handcuffs:uncuffMeAfterRevive", function()
+RegisterNetEvent("moritz_handcuffs:uncuffMeAfterRevive", function()
     local playerPed = PlayerPedId()
     ClearPedTasks(playerPed)
     ClearPedTasksImmediately(playerPed)
@@ -507,10 +507,10 @@ RegisterNetEvent("klamer_handcuffs:uncuffMeAfterRevive", function()
     DisablePlayerFiring(playerPed, false)
     SetPedCanPlayGestureAnims(playerPed, true)
     FreezeEntityPosition(playerPed, false)
-    TriggerServerEvent("klamer_handcuffs:uncuffed")
+    TriggerServerEvent("moritz_handcuffs:uncuffed")
 end)
 
-RegisterNetEvent("klamer_handcuffs:uncuffHim", function()
+RegisterNetEvent("moritz_handcuffs:uncuffHim", function()
     local ped = PlayerPedId()
     loadAnimationDictonary('mp_arresting')
     Wait(250)
@@ -519,19 +519,19 @@ RegisterNetEvent("klamer_handcuffs:uncuffHim", function()
 	ClearPedTasks(ped)
 end)
 
-RegisterNetEvent("klamer_handcuffs:dragMe", function(cop)
+RegisterNetEvent("moritz_handcuffs:dragMe", function(cop)
     local playerPed = PlayerPedId()
     FreezeEntityPosition(playerPed, true)
     AttachEntityToEntity(playerPed, GetPlayerPed(GetPlayerFromServerId(cop)), 11816, 0.54, 0.54, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
 end)
 
-RegisterNetEvent("klamer_handcuffs:unDrag", function()
+RegisterNetEvent("moritz_handcuffs:unDrag", function()
     local playerPed = PlayerPedId()
     DetachEntity(playerPed, true, false)
     FreezeEntityPosition(playerPed, false)
 end)
 
-RegisterNetEvent("klamer_handcuffs:setMeInVehicle", function(vehicle,seatIndex)
+RegisterNetEvent("moritz_handcuffs:setMeInVehicle", function(vehicle,seatIndex)
     local ped = PlayerPedId()
     local vehicle, distance = ESX.Game.GetClosestVehicle(GetEntityCoords(ped))
     if not DoesEntityExist(tonumber(vehicle)) then
@@ -551,7 +551,7 @@ RegisterNetEvent("klamer_handcuffs:setMeInVehicle", function(vehicle,seatIndex)
     setInVehicle = false
 end)
 
-RegisterNetEvent("klamer_handcuffs:leaveVehicle", function()
+RegisterNetEvent("moritz_handcuffs:leaveVehicle", function()
     local playerPed = PlayerPedId()
     if IsPedSittingInAnyVehicle(playerPed) then
         local vehicle = GetVehiclePedIsIn(playerPed, false)
@@ -560,22 +560,22 @@ RegisterNetEvent("klamer_handcuffs:leaveVehicle", function()
     end
 end)
 
-RegisterNetEvent("klamer_handcuffs:getInventory", function(target)
+RegisterNetEvent("moritz_handcuffs:getInventory", function(target)
     exports["ox_inventory"]:openInventory("player", target)
 end)
 
-AddEventHandler("klamer_handcuffs:closeInventoryHook", function()
+AddEventHandler("moritz_handcuffs:closeInventoryHook", function()
     local source = GetPlayerServerId(NetworkGetPlayerIndexFromPed(PlayerPedId()))
-    if not Player(source).state.klamer_IsPlayerSearchingInventory then
+    if not Player(source).state.moritz_IsPlayerSearchingInventory then
         return
     end
-    if Player(source).state.klamer_IsPlayerSearchingInventory ~= 0 then
-        TriggerServerEvent("klamer_handcuffs:closeInventory")
+    if Player(source).state.moritz_IsPlayerSearchingInventory ~= 0 then
+        TriggerServerEvent("moritz_handcuffs:closeInventory")
     end
 end)
 
-RegisterNetEvent('klamer_notify_handcuff',function(text)
-    klamer_notify(text)
+RegisterNetEvent('moritz_notify_handcuff',function(text)
+    moritz_notify(text)
 end)
 
 
@@ -590,11 +590,11 @@ function move_3D_text_loop()
             attachedPed = GetPlayerPed(attachedPed)
             if attachedPed ~= 0 then
                 DetachEntity(attachedPed, true, true)
-                TriggerServerEvent("klamer_handcuffs:unDragPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(attachedPed)))
+                TriggerServerEvent("moritz_handcuffs:unDragPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(attachedPed)))
                 text_loop=false
                 break
             else
-                TriggerServerEvent("klamer_handcuffs:unDragPlayer")
+                TriggerServerEvent("moritz_handcuffs:unDragPlayer")
                 text_loop=false
                 break
             end
@@ -614,7 +614,7 @@ function main_loop_handcuffs()
         if not IsEntityPlayingAnim(PlayerPedId(), "mp_arresting", "idle", 3) and not setInVehicle then
             TaskPlayAnim(PlayerPedId(), 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0.0, false, false, false)
         end
-        if LocalPlayer.state.klamer_PlayerIsCuffed then
+        if LocalPlayer.state.moritz_PlayerIsCuffed then
         else
             zakajdankowany = false
             break
@@ -625,21 +625,21 @@ end
 AddEventHandler("zakajdankuj", function(entity)
     local playerPed = PlayerPedId()
     local entity = entity.entity
-    local isDead = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_isDead
+    local isDead = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.moritz_isDead
     if Config.HandsUp then
         if (IsEntityPlayingAnim(entity, "random@mugging3", "handsup_standing_base", 3) or isDead) then
             local playerheading = GetEntityHeading(playerPed)
             local playerlocation = GetEntityForwardVector(playerPed)
             local coords = GetEntityCoords(playerPed)
-            TriggerServerEvent("klamer_handcuffs:cuffPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)), playerheading, coords, playerlocation)
+            TriggerServerEvent("moritz_handcuffs:cuffPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)), playerheading, coords, playerlocation)
         else
 
-            klamer_notify('Die Person muss die Hände heben!')
+            moritz_notify('Die Person muss die Hände heben!')
         end
     else 
         local playerheading = GetEntityHeading(playerPed)
         local playerlocation = GetEntityForwardVector(playerPed)
         local coords = GetEntityCoords(playerPed)
-        TriggerServerEvent("klamer_handcuffs:cuffPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)), playerheading, coords, playerlocation)
+        TriggerServerEvent("moritz_handcuffs:cuffPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)), playerheading, coords, playerlocation)
     end
 end)
