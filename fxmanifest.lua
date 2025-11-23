@@ -1,5 +1,5 @@
-author "KL4M3R | https://github.com/KL4M3R"
-description "KL4M3R Simple handcuffs for ox_inventory"
+author "Moritz"
+description "KL4M3R Handcuffs, umgeschrieben zu Kabelbindern"
 version '1.3'
 
 client_script {
@@ -17,4 +17,5 @@ shared_script '@es_extended/imports.lua'
 fx_version "bodacious"
 games {"gta5"}
 lua54 'yes'
+
 
