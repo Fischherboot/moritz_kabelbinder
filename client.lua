@@ -59,7 +59,7 @@ if Config.HandsUp then
         end
     end)
 
-    RegisterKeyMapping("_handsup", "raise your hand", "keyboard",Config.HandsUp_key)
+    RegisterKeyMapping("_handsup", "Hände hoch", "keyboard",Config.HandsUp_key)
 end
 
 
@@ -92,7 +92,7 @@ exports['qtarget']:Player({
     options = {
         {
             icon = "fa-solid fa-handcuffs",
-            label = "cuff",
+            label = "Festnehmen",
             item = Config.req_items['handcuff'],
             event = 'zakajdankuj',
             canInteract = function(entity)
@@ -112,7 +112,7 @@ exports['qtarget']:Player({
         },
         {
             icon = "fa-solid fa-handcuffs",
-            label = "uncuff",
+            label = "Freilassen",
             item = Config.req_items['handcuff'],
             action = function(entity)
                 local playerPed = PlayerPedId()
@@ -123,7 +123,7 @@ exports['qtarget']:Player({
                     local coords = GetEntityCoords(playerPed)
                     TriggerServerEvent("klamer_handcuffs:uncuffPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)), playerheading, coords, playerlocation)
                 else
-                    klamer_notify("This player is not handcuffed")
+                    klamer_notify("Diese Person ist nicht Festgenommen")
                 end
             end,
             canInteract = function(entity)
@@ -144,7 +144,7 @@ exports['qtarget']:Player({
        
         {
             icon = "fa-solid fa-people-robbery",
-            label = "Search",
+            label = "Durchsuchen",
             item = Config.req_items['handcuff'],
             action = function(entity)
                 local playerPed = PlayerPedId()
@@ -152,7 +152,7 @@ exports['qtarget']:Player({
                 if target then
                     TriggerServerEvent("klamer_handcuffs:searchInventory", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)))
                 else
-                    klamer_notify("you can only search a player when he is handcuffed or dead")
+                    klamer_notify("Du kannst nur Spieler durchsuchen, wenn sie verhaftet oder tot sind")
                 end
             end,
             canInteract = function(entity)
@@ -171,7 +171,7 @@ exports['qtarget']:Player({
         },
         {
             icon = "fa-solid fa-person-walking",
-            label = "Move",
+            label = "Bewegen",
            -- item = "handcuffs",
             action = function(entity)
                 local playerPed = PlayerPedId()
@@ -184,7 +184,7 @@ exports['qtarget']:Player({
                     text_loop = true
                     move_3D_text_loop()
                 else
-                    klamer_notify("you can't move a player!")
+                    klamer_notify("Du kannst diesen Spieler nicht bewegen!")
                 end
                 
             end,
@@ -205,14 +205,14 @@ exports['qtarget']:Player({
         },
         {
             icon = "fa-solid fa-person-walking",
-            label = "put the player away",
+            label = "Spieler loslassen",
             action = function(entity)
                 local playerPed = PlayerPedId()
                 text_loop = false
                 if ESX.PlayerData.job.name == "police" then
                     TriggerServerEvent("klamer_handcuffs:unDragPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)))
                 else
-                    klamer_notify("You can't let go of a player!")
+                    klamer_notify("Du kannst den Spieler nicht loslassen!")
                 end
             end,
             canInteract = function(entity)
@@ -229,7 +229,7 @@ exports['qtarget']:Player({
         },
         {
             icon = "fa-solid fa-handcuffs",
-            label = "uncuff (lockpick)",
+            label = "Handschellen knacken (Dietrich)",
             item = Config.req_items['lockpick'],
             action = function(entity)
                 local playerPed = PlayerPedId()
@@ -248,12 +248,12 @@ exports['qtarget']:Player({
                     else
                         local ___klamer = math.random(1,2)
                         if ___klamer == 1 then
-                            klamer_notify("You broke the lockpick")
+                            klamer_notify("Der Dietrich ist zerbrochen")
                             TriggerServerEvent("klamer_handcuffs:lockpickDelete")
                         end
                     end
                 else
-                    klamer_notify("you can't break the handcuffs")
+                    klamer_notify("Du kannst die Handschellen nicht knacken")
                 end
             end,
             canInteract = function(entity)
@@ -272,7 +272,7 @@ exports['qtarget']:Player({
         },
         {
             icon = "fa-solid fa-car-rear",
-            label = "Put in the vehicle",
+            label = "Ins Fahrzeug setzen",
             action = function(entity)
                 local playerPed = PlayerPedId()
                 local target = Player(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))).state.klamer_PlayerIsDragged
@@ -284,22 +284,22 @@ exports['qtarget']:Player({
                     local vehicle, distance = ESX.Game.GetClosestVehicle(GetEntityCoords(PlayerPedId()))
 
                     if GetVehicleDoorLockStatus(vehicle) == 4 then
-                        klamer_notify("This vehicle is closed!")
+                        klamer_notify("Das Fahrzeug ist abgeschlossen!")
                         return
                     end
 
                     if not DoesEntityExist(vehicle) then
-                        klamer_notify("There is no vehicle")
+                        klamer_notify("Kein Fahrzeug in der Nähe")
                         return
                     end
 
                     if distance > 6.0 then
-                        klamer_notify("The vehicle is too far away")
+                        klamer_notify("Das Fahrzeug ist zu weit entfernt")
                         return
                     end
 
                     if not AreAnyVehicleSeatsFree(vehicle) then
-                        klamer_notify("There is no room in this vehicle")
+                        klamer_notify("Kein Platz im Fahrzeug frei")
                         return
                     end
 
@@ -319,7 +319,7 @@ exports['qtarget']:Player({
                         end
                     end
                 else
-                    klamer_notify("You cannot put a player in a vehicle")
+                    klamer_notify("Du kannst den Spieler nicht ins Fahrzeug setzen")
                 end
             end,
             canInteract = function(entity)
@@ -344,7 +344,7 @@ exports['qtarget']:Vehicle({
     options = {
         {
             icon = "fa-solid fa-car-rear",
-            label = "get the player out of the car",
+            label = "Spieler aus Fahrzeug holen",
             action = function(vehicle)
                 local getPed = 0
                 if (GetVehicleDoorLockStatus(vehicle) == 4) then
@@ -584,7 +584,7 @@ end)
 function move_3D_text_loop()
     while text_loop do
         Citizen.Wait(0)
-        drawTxt("Press [E] to release the person",0.50,0.80,0.4,255,255,255,180)
+        drawTxt("Drücke [E], um die Person loszulassen",0.50,0.80,0.4,255,255,255,180)
         if IsControlJustPressed(0,38) then
             local attachedPed, dist = ESX.Game.GetClosestPlayer(GetEntityCoords(PlayerPedId()))
             attachedPed = GetPlayerPed(attachedPed)
@@ -634,7 +634,7 @@ AddEventHandler("zakajdankuj", function(entity)
             TriggerServerEvent("klamer_handcuffs:cuffPlayer", GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)), playerheading, coords, playerlocation)
         else
 
-            klamer_notify('The person must raise their hands!')
+            klamer_notify('Die Person muss die Hände heben!')
         end
     else 
         local playerheading = GetEntityHeading(playerPed)

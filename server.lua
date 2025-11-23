@@ -28,7 +28,7 @@ RegisterNetEvent("klamer_handcuffs:cuffPlayer", function(target, playerheading, 
     local targetPed = GetPlayerPed(target)
 
     if not DoesEntityExist(targetPed) then
-        TriggerClientEvent('klamer_notify_handcuff',"you can't handcuff")
+        TriggerClientEvent('klamer_notify_handcuff',"Du kannst niemand festnehmen")
         return
     end
 
@@ -37,17 +37,17 @@ RegisterNetEvent("klamer_handcuffs:cuffPlayer", function(target, playerheading, 
     local distance = #(targetCoords-localCoords)
 
     if distance > 3.0 then
-        TriggerClientEvent('klamer_notify_handcuff', "you are too far away")
+        TriggerClientEvent('klamer_notify_handcuff', "Du bist zu weit entfernt")
         return
     end
 
     if Player(player).state.klamer_PlayerIsCuffed then
-        TriggerClientEvent('klamer_notify_handcuff', "You can't cuff while cuffed")
+        TriggerClientEvent('klamer_notify_handcuff', "Du kannst niemanden festnehmen, während du selbst festgenommen bist")
         return
     end
 
     if Player(target).state.klamer_PlayerIsCuffed then
-        TriggerClientEvent('klamer_notify_handcuff', "This person is already handcuffed")
+        TriggerClientEvent('klamer_notify_handcuff', "Diese Person ist bereits festgenommen")
         return
     end
 
@@ -61,9 +61,9 @@ RegisterNetEvent("klamer_handcuffs:cuffPlayer", function(target, playerheading, 
         TriggerClientEvent("klamer_handcuffs:cuffHim", player, false)
     end
 
-    TriggerClientEvent('klamer_notify_handcuff',"You handcuffed ID: ["..target.."]")
+    TriggerClientEvent('klamer_notify_handcuff',"Du hast die ID gefesselt: ["..target.."]")
     local xTarget = ESX.GetPlayerFromId(target)
-    xTarget.showNotification("You have been handcuffed by the ID: ["..player.."]")
+    xTarget.showNotification("Du wurdest gefesselt von ID: ["..player.."]")
 
     local targetLicense = string.gsub(GetPlayerIdentifier(player,1),"license:","")
 end)
@@ -73,12 +73,12 @@ RegisterNetEvent("klamer_handcuffs:uncuffPlayer", function(target, playerheading
     local xPlayer = ESX.GetPlayerFromId(player)
 
     if Player(player).state.klamer_PlayerIsCuffed then
-        TriggerClientEvent('klamer_notify_handcuff',"You can't uncuff while handcuffed.")
+        TriggerClientEvent('klamer_notify_handcuff',"Du kannst keine Handschellen lösen, während du selbst festgenommen bist.")
         return
     end
 
     if not Player(target).state.klamer_PlayerIsCuffed then
-        TriggerClientEvent('klamer_notify_handcuff',"This person is not handcuffed")
+        TriggerClientEvent('klamer_notify_handcuff',"Diese Person ist nicht festgenommen")
         return
     end
 
@@ -87,9 +87,9 @@ RegisterNetEvent("klamer_handcuffs:uncuffPlayer", function(target, playerheading
     TriggerClientEvent("klamer_handcuffs:uncuffMe", target, playerheading, coords, playerlocation)
     TriggerClientEvent("klamer_handcuffs:uncuffHim", player)
 
-    TriggerClientEvent('klamer_notify_handcuff',"you forged handcuffs ID: ["..target.."]")
+    TriggerClientEvent('klamer_notify_handcuff',"Du hast die Handschellen entfernt von ID: ["..target.."]")
     local xTarget = ESX.GetPlayerFromId(target)
-    xTarget.showNotification("you have been handcuffed: ["..player.."]")
+    xTarget.showNotification("Du wurdest festgenmmen von ID: ["..player.."]")
 
     local targetLicense = string.gsub(GetPlayerIdentifier(player,1),"license:","")
 end)
@@ -99,7 +99,7 @@ RegisterNetEvent("klamer_handcuffs:searchInventory", function(target)
     local xPlayer = ESX.GetPlayerFromId(player)
     local targetLicense = string.gsub(GetPlayerIdentifier(player,1),"license:","")
     if Player(player).state.klamer_PlayerIsCuffed then
-        TriggerClientEvent('klamer_notify_handcuff',"You can't search while you're handcuffed")
+        TriggerClientEvent('klamer_notify_handcuff',"Du kannst niemanden durchsuchen, während du festgenommen bist")
         return
     end
 
@@ -108,7 +108,7 @@ RegisterNetEvent("klamer_handcuffs:searchInventory", function(target)
     local distance = #(targetCoords-localCoords)
 
     if distance > 6.0 then
-        TriggerClientEvent('klamer_notify_handcuff',"This person is too far away!")
+        TriggerClientEvent('klamer_notify_handcuff',"Diese Person ist zu weit entfernt!")
         return
     end
 
@@ -121,9 +121,9 @@ RegisterNetEvent("klamer_handcuffs:searchInventory", function(target)
     Player(source).state.klamer_IsPlayerSearchingInventory = target
     TriggerClientEvent("klamer_handcuffs:getInventory", player, target)
 
-    TriggerClientEvent('klamer_notify_handcuff',"You search ID: ["..target.."]")
+    TriggerClientEvent('klamer_notify_handcuff',"Du durchsuchst ID: ["..target.."]")
     local xTarget = ESX.GetPlayerFromId(target)
-    xTarget.showNotification("You have been searched by ID: ["..player.."]")
+    xTarget.showNotification("Du wurdest durchsucht von ID: ["..player.."]")
 end)
 
 RegisterNetEvent("klamer_handcuffs:uncuffed", function()
@@ -152,13 +152,13 @@ RegisterNetEvent("klamer_handcuffs:dragPlayer", function(target)
     local dist = #(targetCoords-localCoords)
 
     if dist > 10.0 then
-        TriggerClientEvent('klamer_notify_handcuff',"You are too far away!")
+        TriggerClientEvent('klamer_notify_handcuff',"Du bist zu weit entfernt!")
     
         return
     end
     
     if Player(target).state.klamer_PlayerIsDragged then
-        TriggerClientEvent('klamer_notify_handcuff',"The player is already being transferred!")
+        TriggerClientEvent('klamer_notify_handcuff',"Der Spieler wird bereits transportiert!")
         return
     end
 
@@ -187,12 +187,12 @@ RegisterNetEvent("klamer_handcuffs:unDragPlayer", function(target)
     local dist = #(targetCoords-localCoords)
 
     if dist > 10.0 then
-        TriggerClientEvent('klamer_notify_handcuff',"You are too far away!")
+        TriggerClientEvent('klamer_notify_handcuff',"Der Spieler ist zu weit entfernt")
         return
     end
     
     if not Player(target).state.klamer_PlayerIsDragged then
-        TriggerClientEvent('klamer_notify_handcuff',"The player is not transferred")
+        TriggerClientEvent('klamer_notify_handcuff',"Der Spieler wird nicht transportiert")
         return
     end
 
@@ -228,7 +228,7 @@ RegisterNetEvent("klamer_handcuffs:setPedIntoVehicle", function(target,vehicle,s
     local dist = #(coords - targetCoords)
 
     if dist > 10.0 then
-        TriggerClientEvent('klamer_notify_handcuff',"The player is too far away")
+        TriggerClientEvent('klamer_notify_handcuff',"Der Spieler ist zu weit entfernt")
     
         return
     end
@@ -241,7 +241,7 @@ RegisterNetEvent("klamer_handcuffs:lockpickDelete", function()
     local xPlayer = ESX.GetPlayerFromId(player)
     local item = xPlayer.getInventoryItem(Config.req_items['lockpick'])
     if item.count > 0 then
-        TriggerClientEvent('klamer_notify_handcuff',"You broke the lockpick")
+        TriggerClientEvent('klamer_notify_handcuff',"Der Dietrich ist zerbrochen")
         xPlayer.removeInventoryItem(Config.req_items['lockpick'],1)
     end
 end)
@@ -257,7 +257,7 @@ RegisterNetEvent("klamer_handcuffs:getPedFromVehicle", function(target)
     local dist = #(coords - targetCoords)
 
     if dist > 10.0 then
-        TriggerClientEvent('klamer_notify_handcuff',"The player is too far away")
+        TriggerClientEvent('klamer_notify_handcuff',"Der Spieler ist zu weit entfernt")
         return
     end
 
